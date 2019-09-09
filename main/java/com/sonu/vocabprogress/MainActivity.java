@@ -3,6 +3,8 @@ package com.sonu.vocabprogress;
 import android.app.*;
 import android.os.*;
 import androidx.appcompat.app.*;
+import android.content.*;
+import com.sonu.vocabprogress.service.*;
 
 public class MainActivity extends AppCompatActivity 
 {
@@ -14,5 +16,10 @@ public class MainActivity extends AppCompatActivity
 		
 		//Removing divider between actionbar and layout
 		getSupportActionBar().setElevation(0);
+		
+		//starting clipboard lisntener service
+		startService(new Intent(MainActivity.this,ClipBoardListenerService.class));
     }
+	
+	
 }
