@@ -3,5 +3,6 @@
 
     <string name="app_name">VocabProgress</string>
     <string name="hello_world">Hello world!</string>
+    <string name="title_activity_settings">Settings</string>
 
 </resources>
