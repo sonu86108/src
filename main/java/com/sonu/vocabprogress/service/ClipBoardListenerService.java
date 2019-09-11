@@ -16,7 +16,7 @@ public class ClipBoardListenerService extends Service
 	}
 
 	@Override
-	public void onStart(Intent intent, int startId)
+	public int onStartCommand(Intent intent, int flags, int startId)
 	{
 		// TODO: Implement this method
 		Toast.makeText(getApplicationContext(),"ClipBoardListnerService started",Toast.LENGTH_LONG).show();
@@ -33,7 +33,10 @@ public class ClipBoardListenerService extends Service
 
 
 			});
+		return super.onStartCommand(intent, flags, startId);
 	}
+	
+	
 	
 	
 	
