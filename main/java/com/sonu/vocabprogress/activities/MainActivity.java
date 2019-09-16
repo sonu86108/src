@@ -14,17 +14,24 @@ import com.sonu.vocabprogress.models.*;
 import android.app.Dialog;
 import android.preference.*;
 import android.database.*;
+import com.google.android.material.floatingactionbutton.*;
+import android.widget.RadioGroup.*;
+import com.sonu.vocabprogress.utilities.sharedprefs.*;
 
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener
+public class MainActivity extends AppCompatActivity implements View.OnClickListener,Switch.OnCheckedChangeListener
 {
+
+	
+	
 	ActionBar actionBar;
 	CardView cardViewSettings,cardViewWordList,cardViewQuizes;
 	Intent serviceIntent;
 	SQLiteHelper db;
 	Word word;
-	Dialog dialog;
-	EditText name,meaning,desc;
+	Switch mainSwitch;
+	SharedPreferences sharedPref;
+	SharedPreferences.Editor sharedPrefEditor;
 
 	//OnCreate Activity
     @Override
@@ -34,25 +41,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 		
 		//Initialization 
-		cardViewSettings=findViewById(R.id.id_cardView_settings);
-		cardViewWordList=findViewById(R.id.id_cardView_WordList);
-		cardViewQuizes=findViewById(R.id.id_cardView_Quizes);
-		
-		initDialog();
-		db=new SQLiteHelper(this);
-		//Intent for service
-		serviceIntent=new Intent(MainActivity.this,ClipBoardListenerService.class);
- 
-		//ActionBar
-		this.actionBar();
+		init();
+        //ActionBar
+		actionBar();
 		//Setting onclick linsteners
-		cardViewSettings.setOnClickListener(this);
-		cardViewWordList.setOnClickListener(this);
-		cardViewQuizes.setOnClickListener(this);
-	
-		Button submit=dialog.findViewById(R.id.id_btn_submit);
-		submit.setOnClickListener(this);
-		
+		setOnclickListners();
 		
 
 	}
@@ -63,54 +56,59 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		switch(p1.getId()){
 			case R.id.id_cardView_settings:
 				//Todo
-				dialog.show();
 				break;
-			case R.id.id_btn_submit:
-			     onClickSubmitBtn();
-				 break;
 				 
 			case R.id.id_cardView_WordList:
 				 Intent intent=new Intent(MainActivity.this,WordListActivity.class);
 				 startActivity(intent);
 				 break;
 			case R.id.id_cardView_Quizes:
-				readWord();
+				readWordData();
 				break;
 				
 		}
 	}
 	
-	//Dialog initiliacization
-	public void initDialog(){
-		dialog =new Dialog(this);
-		dialog.setContentView(R.layout.tmp_word_entry);
-		dialog.setCancelable(true);
-		name=dialog.findViewById(R.id.id_enter_word);
-		meaning=dialog.findViewById(R.id.id_enter_word_meaning);
-		desc=dialog.findViewById(R.id.id_enter_word_desc);
+	//on checked change listener main Switch
+	@Override
+	public void onCheckedChanged(CompoundButton p1, boolean p2)
+	{
+		if(p1.isChecked()){
+			startService(serviceIntent);
+			sharedPrefEditor.putBoolean(Prefs.AppSettings.MAIN_SWITCH_STATUS.toString(),true).apply();
+		}else{
+			stopService(serviceIntent);
+			sharedPrefEditor.putBoolean(Prefs.AppSettings.MAIN_SWITCH_STATUS.toString(),false).apply();
+			Toast.makeText(MainActivity.this,"ClipBoardListenerService stopped",Toast.LENGTH_LONG).
+				show();
+		}
 	}
 	
-	//On sumbit button click of dialog
-	public void onClickSubmitBtn(){
-		word=new Word(name.getText().toString(),
-					  meaning.getText().toString(),
-					  desc.getText().toString());
-		if(db.insertData(word)){
-			Toast.makeText(this,"New Word Added Successfully",
-			Toast.LENGTH_LONG).show();
-			dialog.dismiss();
-		}
-else
-{
-			Toast.makeText(this,"Error while adding",
-						   Toast.LENGTH_LONG).show();
-						   dialog.dismiss();
-		}
-	
+	//initialiazation
+	private void init(){
+		//getting shared pref ref
+		sharedPref=this.getSharedPreferences(Prefs.SharedPrefs.APP_SETTINGS.toString(),MODE_PRIVATE);
+		sharedPrefEditor=sharedPref.edit();
+		cardViewSettings=findViewById(R.id.id_cardView_settings);
+		cardViewWordList=findViewById(R.id.id_cardView_WordList);
+		cardViewQuizes=findViewById(R.id.id_cardView_Quizes);
+		db=SQLiteHelper.getSQLiteHelper(this);
+		//Intent for service
+		serviceIntent=new Intent(MainActivity.this,ClipBoardListenerService.class);
 	}
+	
+	//setting on click listeners
+	private void setOnclickListners(){
+		cardViewSettings.setOnClickListener(this);
+		cardViewWordList.setOnClickListener(this);
+		cardViewQuizes.setOnClickListener(this);
+		mainSwitch.setOnCheckedChangeListener(this);
+	}
+	
+	
 	
 	//Read word data from sqlite database
-	public void readWord(){
+	public void readWordData(){
 		Cursor curso =db.retrieveData();
 		if(curso.moveToFirst()){
 		   do{
@@ -152,29 +150,23 @@ else
 			//Custom view action bar main switch
 			actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 			actionBar.setCustomView(R.layout.app_bar_custom_view_switch);
-			Switch mainSwitch=actionBar.getCustomView().findViewById(R.id.app_bar_custom_view_switchSwitch);
-			mainSwitch.setOnCheckedChangeListener(new Switch.OnCheckedChangeListener() {
-
-				@Override
-				public void onCheckedChanged(CompoundButton p1, boolean p2)
-				{
-					// TODO: Implement this method
-					if(p1.isChecked()){
-						startService(serviceIntent);
-					}else{
-						stopService(serviceIntent);
-						Toast.makeText(MainActivity.this,"ClipBoardListenerService stopped",Toast.LENGTH_LONG).
-								show();
-
-					}
-				}
-
-
-			});
+		    mainSwitch=actionBar.getCustomView().findViewById(R.id.app_bar_custom_view_switchSwitch);
+			//loading user settings mainSwitch
+			loadUserPrefs();
+			
 		}
+		
+		
 	}
 	
-	
+	//load user preferences
+	private void loadUserPrefs(){
+       if(sharedPref.getBoolean(Prefs.AppSettings.MAIN_SWITCH_STATUS.toString(),false)){
+		   mainSwitch.setChecked(true);
+	   }else{
+		   mainSwitch.setChecked(false);
+	   }
+	}
 
 
 

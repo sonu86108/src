@@ -6,10 +6,13 @@ import android.widget.*;
 import androidx.core.app.*;
 import com.sonu.vocabprogress.R;
 import com.sonu.vocabprogress.activities.*;
+import com.sonu.vocabprogress.utilities.helpers.*;
+import com.sonu.vocabprogress.models.*;
 
 public class ClipBoardListenerService extends Service
 {
 	ClipboardManager clipBoardManager;
+	SQLiteHelper db;
 
 	@Override
 	public IBinder onBind(Intent p1)
@@ -23,13 +26,18 @@ public class ClipBoardListenerService extends Service
 	{
 		// TODO: Implement this method
 		Toast.makeText(getApplicationContext(),"ClipBoardListnerService started",Toast.LENGTH_LONG).show();
+		db=SQLiteHelper.getSQLiteHelper(this);
 		clipBoardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 		clipBoardManager.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
 
 				@Override
 				public void onPrimaryClipChanged()
 				{
-			        makeNotification(clipBoardManager.getText().toString());
+					String word=clipBoardManager.getText().toString().trim();
+			        makeNotification(word);
+					if(db.insertData(new Word(word,"n/a","n/a"))){
+						Toast.makeText(ClipBoardListenerService.this,"word added success",Toast.LENGTH_SHORT);
+					}
 				}
 
 
@@ -48,9 +56,10 @@ public class ClipBoardListenerService extends Service
 		
 		//Intent to open notification dialog activity to get word input
 		Intent intent=new Intent(ClipBoardListenerService.this,NotificationDialogActivity.class);
+		intent.putExtra("word",msg);
 		PendingIntent pi=
 		PendingIntent.getActivity(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-		nBuilder.addAction(android.R.drawable.ic_menu_view, "VIEW", pi);
+		nBuilder.addAction(android.R.drawable.ic_menu_view, "Edit", pi);
 		//notification manager to show notification on device
 		NotificationManager nm=(NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 		
@@ -58,7 +67,7 @@ public class ClipBoardListenerService extends Service
 		if(Build.VERSION.SDK_INT >=Build.VERSION_CODES.O){
 
 			String channelId="your channel id";
-			NotificationChannel nc=new NotificationChannel(channelId," Human redable tag",NotificationManager.IMPORTANCE_DEFAULT);
+			NotificationChannel nc=new NotificationChannel(channelId,"mytag",NotificationManager.IMPORTANCE_DEFAULT);
 		    nm.createNotificationChannel(nc);
 			nBuilder.setChannelId(channelId);
 		}

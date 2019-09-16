@@ -9,12 +9,20 @@ import java.util.*;
 import com.sonu.vocabprogress.adapters.*;
 import android.database.*;
 import com.sonu.vocabprogress.utilities.helpers.*;
+import com.google.android.material.floatingactionbutton.*;
+import android.view.*;
+import android.content.*;
 
-public class WordListActivity extends AppCompatActivity 
+public class WordListActivity extends AppCompatActivity
+implements View.OnClickListener
 {
+
+	
+	
 	RecyclerView wordListRecyclerView;
 	List<Word> wordList;
 	WordListAdapter wordListAdapter;
+	FloatingActionButton fabAddWord;
 	SQLiteHelper db;
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -22,29 +30,67 @@ public class WordListActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wordlist);
 		
-		wordListRecyclerView=findViewById(R.id.id_recyclerview_wordlist);
-		db=new SQLiteHelper(this);
-		wordList=new ArrayList();
 		
-		//Data passing to adapeter
-		wordListAdapter=new WordListAdapter(wordList);
-		
-		//setting layout manager to recycler view
-		RecyclerView.LayoutManager lm=new LinearLayoutManager(getApplicationContext());
-		wordListRecyclerView.setLayoutManager(lm);
-		
-		//setting item animator
-		wordListRecyclerView.setItemAnimator(new DefaultItemAnimator());
-		
-		//finally setting adapter to recycler view
-		wordListRecyclerView.setAdapter(wordListAdapter);
-		
+		//initializations
+		init();
+		//wordList add
 		updateWordList();
 		
+		//setting event listeners
+		setListners();
 		
 		
 		
     }
+	//initializations
+	public void init(){
+		wordListRecyclerView=findViewById(R.id.id_recyclerview_wordlist);
+		fabAddWord=findViewById(R.id.id_fab);
+		db=SQLiteHelper.getSQLiteHelper(this);
+		wordList=new ArrayList();
+		//init recycler view
+		initRecyView();
+	}
+	
+	//recycler view initialization
+	public void initRecyView(){
+		//Data passing to adapeter
+		wordListAdapter=new WordListAdapter(wordList);
+
+		//setting layout manager to recycler view
+		RecyclerView.LayoutManager lm=new LinearLayoutManager(getApplicationContext());
+		wordListRecyclerView.setLayoutManager(lm);
+
+		//setting item animator
+		wordListRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+		//finally setting adapter to recycler view
+		wordListRecyclerView.setAdapter(wordListAdapter);
+	}
+	
+	@Override
+	public void onClick(View p1)
+	{
+		switch(p1.getId()){
+			case R.id.id_fab:
+				startActivity(new Intent(this,NotificationDialogActivity.class));
+		}
+	}
+
+	@Override
+	protected void onStart()
+	{
+		// TODO: Implement this method
+		super.onStart();
+		updateWordList();
+	}
+	
+	
+	
+	//setting event listners
+	private void setListners(){
+		fabAddWord.setOnClickListener(this);
+	}
 	
 	//Read word data from sqlite database
 	public void updateWordList(){
