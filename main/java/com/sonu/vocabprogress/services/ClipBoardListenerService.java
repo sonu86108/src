@@ -5,7 +5,7 @@ import android.content.*;
 import android.widget.*;
 import androidx.core.app.*;
 import com.sonu.vocabprogress.R;
-import com.sonu.vocabprogress.activities.*;
+import com.sonu.vocabprogress.ui.activities.*;
 import com.sonu.vocabprogress.utilities.helpers.*;
 import com.sonu.vocabprogress.models.*;
 

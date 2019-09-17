@@ -1,4 +1,4 @@
-package com.sonu.vocabprogress.activities;
+package com.sonu.vocabprogress.ui.activities;
 
 import android.os.Bundle;
 import androidx.appcompat.app.*;
@@ -6,7 +6,7 @@ import com.sonu.vocabprogress.R;
 import androidx.recyclerview.widget.*;
 import com.sonu.vocabprogress.models.*;
 import java.util.*;
-import com.sonu.vocabprogress.adapters.*;
+import com.sonu.vocabprogress.ui.adapters.*;
 import android.database.*;
 import com.sonu.vocabprogress.utilities.helpers.*;
 import com.google.android.material.floatingactionbutton.*;
@@ -34,7 +34,7 @@ implements View.OnClickListener
 		//initializations
 		init();
 		//wordList add
-		updateWordList();
+		//updateWordList();
 		
 		//setting event listeners
 		setListners();
@@ -73,9 +73,23 @@ implements View.OnClickListener
 	{
 		switch(p1.getId()){
 			case R.id.id_fab:
-				startActivity(new Intent(this,NotificationDialogActivity.class));
+				startActivityForResult(new Intent(this,
+				NotificationDialogActivity.class),24);
 		}
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		// TODO: Implement this method
+		if(requestCode==24){
+			if(resultCode==RESULT_OK){
+				updateWordList();
+			}
+		}
+	}
+	
+	
 
 	@Override
 	protected void onStart()
@@ -84,6 +98,8 @@ implements View.OnClickListener
 		super.onStart();
 		updateWordList();
 	}
+	
+	
 	
 	
 	

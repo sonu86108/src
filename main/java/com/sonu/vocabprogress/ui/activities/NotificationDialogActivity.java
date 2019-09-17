@@ -1,4 +1,4 @@
-package com.sonu.vocabprogress.activities;
+package com.sonu.vocabprogress.ui.activities;
 
 import android.os.*;
 import android.graphics.drawable.*;
@@ -11,6 +11,7 @@ import androidx.appcompat.app.*;
 import com.sonu.vocabprogress.models.*;
 import com.sonu.vocabprogress.utilities.helpers.*;
 import com.google.android.material.floatingactionbutton.*;
+import android.content.*;
 
 public class NotificationDialogActivity extends AppCompatActivity 
 implements View.OnClickListener
@@ -19,6 +20,7 @@ implements View.OnClickListener
 	Button btnSave;
 	String wordName,meaning,desc;
 	SQLiteHelper db;
+	Intent returnIntent;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -73,6 +75,7 @@ implements View.OnClickListener
 		edtDesc=findViewById(R.id.id_edt_desc);
 		btnSave=findViewById(R.id.id_btn_save);
 		db=SQLiteHelper.getSQLiteHelper(this);
+		returnIntent=new Intent();
 	}
 	
 	//On save button click
@@ -81,18 +84,20 @@ implements View.OnClickListener
 		desc=edtDesc.getText().toString().trim().isEmpty()?"n/a":
 			edtDesc.getText().toString().trim();
 		
-		if(meaning.isEmpty()|| wordName.isEmpty()){
-		      edtMeaning.setError("Provide word's meaning");
+		if((wordName != null && wordName.isEmpty()) || (meaning !=null && meaning.isEmpty())){
 		      edtWord.setError("Provide a word");
+		      edtMeaning.setError("Provide word's meaning");
 		}else if(getIntent().getStringExtra("word")!=null || getIntent().getStringExtra("edit")!=null){
 			if(db.updateData(new Word(wordName,meaning,desc))){
 				Toast.makeText(this,"Word added successfully",Toast.LENGTH_SHORT).show();
+				setResult(RESULT_OK);
 				finish();
 			}
 		}else{
 			wordName=edtWord.getText().toString().trim();
 			if(db.insertData(new Word(wordName,meaning,desc))){
 				Toast.makeText(this,"Word added successfully",Toast.LENGTH_SHORT).show();
+				setResult(RESULT_OK);
 				finish();
 			}
 		}

@@ -1,4 +1,4 @@
-package com.sonu.vocabprogress.adapters;
+package com.sonu.vocabprogress.ui.adapters;
 import androidx.recyclerview.widget.*;
 import android.view.*;
 import android.widget.*;

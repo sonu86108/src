@@ -1,4 +1,4 @@
-package com.sonu.vocabprogress.activities;
+package com.sonu.vocabprogress.ui.activities;
 
 import android.os.*;
 import androidx.appcompat.app.*;
