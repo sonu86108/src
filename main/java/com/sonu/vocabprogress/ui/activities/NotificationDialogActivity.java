@@ -12,6 +12,7 @@ import com.sonu.vocabprogress.models.*;
 import com.sonu.vocabprogress.utilities.helpers.*;
 import com.google.android.material.floatingactionbutton.*;
 import android.content.*;
+import android.database.sqlite.*;
 
 public class NotificationDialogActivity extends AppCompatActivity 
 implements View.OnClickListener
@@ -95,10 +96,23 @@ implements View.OnClickListener
 			}
 		}else{
 			wordName=edtWord.getText().toString().trim();
-			if(db.insertData(new Word(wordName,meaning,desc))){
-				Toast.makeText(this,"Word added successfully",Toast.LENGTH_SHORT).show();
-				setResult(RESULT_OK);
-				finish();
+			
+			try
+			{
+				if (db.insertData(new Word(wordName, meaning, desc)))
+				{
+					Toast.makeText(this, "Word added successfully", Toast.LENGTH_SHORT).show();
+					setResult(RESULT_OK);
+					finish();
+				}
+				else
+				{
+					Toast.makeText(this, "error", Toast.LENGTH_SHORT).show();
+				}
+			}
+			catch (SQLiteConstraintException e)
+			{
+				edtWord.setError("Duplicate value");
 			}
 		}
 	}

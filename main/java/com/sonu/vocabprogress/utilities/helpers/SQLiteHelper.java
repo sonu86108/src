@@ -68,7 +68,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
 					values.put(C3_MEANING, meaning);
 					values.put(C4_DESC, desc);
 					//It throws exception to handle
-					result=writableDb.insertOrThrow(TN_WORD, null, values);
+					writableDb.insertOrThrow(TN_WORD, null, values);
 				
 				
 				}
@@ -76,7 +76,7 @@ public class SQLiteHelper extends SQLiteOpenHelper
 				{
 					values.put(C2_NAME, word.getName());
 					values.put(C3_MEANING, word.getMeaning());
-					result=writableDb.insertOrThrow(TN_WORD, null, values);
+					writableDb.insertOrThrow(TN_WORD, null, values);
 				
 
 				}
@@ -84,13 +84,13 @@ public class SQLiteHelper extends SQLiteOpenHelper
 				{
 					values.put(C2_NAME, word.getName());
 					values.put(C4_DESC, word.getDesc());
-					result=writableDb.insertOrThrow(TN_WORD, null, values);
+					writableDb.insertOrThrow(TN_WORD, null, values);
 				
 				}
 				else
 				{
 					values.put(C2_NAME, word.getName());
-					result=writableDb.insertOrThrow(TN_WORD,null,values);
+					writableDb.insertOrThrow(TN_WORD,null,values);
 				
 				}
 
@@ -101,16 +101,11 @@ public class SQLiteHelper extends SQLiteOpenHelper
 			throw duplicateEntry;
 		}
 		catch(SQLiteException e){
-			writableDb.close();
 			return false;
 		}finally{
 			writableDb.close();
 		}
-     if(result==-1){
-		 return false;
-	 }else{
-		 return true;
-	 }
+		return true;
 	}
 	
 	//Update word data

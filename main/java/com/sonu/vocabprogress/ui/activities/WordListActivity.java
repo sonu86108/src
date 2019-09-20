@@ -12,9 +12,10 @@ import com.sonu.vocabprogress.utilities.helpers.*;
 import com.google.android.material.floatingactionbutton.*;
 import android.view.*;
 import android.content.*;
+import android.graphics.drawable.*;
 
 public class WordListActivity extends AppCompatActivity
-implements View.OnClickListener
+implements View.OnClickListener,View.OnLongClickListener
 {
 
 	
@@ -55,7 +56,7 @@ implements View.OnClickListener
 	//recycler view initialization
 	public void initRecyView(){
 		//Data passing to adapeter
-		wordListAdapter=new WordListAdapter(wordList);
+		wordListAdapter=new WordListAdapter(wordList,this);
 
 		//setting layout manager to recycler view
 		RecyclerView.LayoutManager lm=new LinearLayoutManager(getApplicationContext());
@@ -77,6 +78,22 @@ implements View.OnClickListener
 				NotificationDialogActivity.class),24);
 		}
 	}
+
+
+	@Override
+	public boolean onLongClick(View p1)
+	{
+		// TODO: Implement this method
+		switch(p1.getId()){
+			case R.id.id_cardView:
+				p1.setBackground(new ColorDrawable(R.color.colorPrimary));
+		}
+		return true;
+	}
+	
+
+	
+	
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -111,6 +128,7 @@ implements View.OnClickListener
 	//Read word data from sqlite database
 	public void updateWordList(){
 		Cursor curso =db.retrieveData();
+		wordList.clear();
 		if(curso.moveToFirst()){
 			do{
 				wordList.add(new Word(curso.getString(1),curso.getString(2),curso.getString(3)));

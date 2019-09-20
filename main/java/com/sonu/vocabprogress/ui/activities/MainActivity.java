@@ -68,6 +68,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				
 		}
 	}
+
+	
+	
+	
+	
 	
 	//on checked change listener main Switch
 	@Override
