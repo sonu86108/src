@@ -9,6 +9,7 @@ import java.util.*;
 import com.sonu.vocabprogress.ui.activities.*;
 import android.content.*;
 import androidx.cardview.widget.*;
+import android.view.View.*;
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordListViewHolder>
 {
@@ -50,18 +51,40 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordLi
 	}
 
 	//ViewModel class extending RecyclerView.ViewHolder
-	public class WordListViewHolder extends RecyclerView.ViewHolder{
+	public class WordListViewHolder extends RecyclerView.ViewHolder implements
+	View.OnClickListener,View.OnLongClickListener{
 		public TextView name,meaning,desc;
 		WordListActivity wordListActivity;
 		CardView cardView;
 		public WordListViewHolder(View view,Context wordListActivity){
 			super(view);
+			this.wordListActivity=(WordListActivity)wordListActivity;
 			name=view.findViewById(R.id.id_textview_word);
 			meaning=view.findViewById(R.id.id_textview_meaning);
 			desc=view.findViewById(R.id.id_textview_desc);
+			//desc.setVisibility(View.GONE);
 			cardView=view.findViewById(R.id.id_cardView);
-			cardView.setOnLongClickListener((WordListActivity)wordListActivity);
+			cardView.setOnLongClickListener(this);
+			cardView.setOnClickListener(this);
 		}
+
+		@Override
+		public void onClick(View p1)
+		{
+			wordListActivity.onRecyclerViewItemClick(p1,getAdapterPosition());
+		}
+
+		@Override
+		public boolean onLongClick(View p1)
+		{
+			wordListActivity.onRecyclerViewItemLongClick(p1,getAdapterPosition());
+			return true;
+		}
+
+		
+        
+		
+		
 	}
 
 	

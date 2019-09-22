@@ -13,25 +13,33 @@ import com.google.android.material.floatingactionbutton.*;
 import android.view.*;
 import android.content.*;
 import android.graphics.drawable.*;
+import androidx.appcompat.widget.*;
+import android.widget.TextView;
+import com.sonu.vocabprogress.utilities.*;
+import android.widget.Toast;
 
 public class WordListActivity extends AppCompatActivity
 implements View.OnClickListener,View.OnLongClickListener
 {
 
-	
-	
+	SelectionMode selectionMode;
+	Toolbar toolbar;
 	RecyclerView wordListRecyclerView;
 	List<Word> wordList;
 	WordListAdapter wordListAdapter;
 	FloatingActionButton fabAddWord;
 	SQLiteHelper db;
+	Menu menu;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wordlist);
+		//adding toolbar
+		toolbar=findViewById(R.id.appbar);
+		toolbar.setNavigationIcon(R.drawable.ic_menu_back);
 		
-		
+		setSupportActionBar(toolbar);
 		//initializations
 		init();
 		//wordList add
@@ -46,6 +54,7 @@ implements View.OnClickListener,View.OnLongClickListener
 	//initializations
 	public void init(){
 		wordListRecyclerView=findViewById(R.id.id_recyclerview_wordlist);
+		selectionMode=new SelectionMode(this);
 		fabAddWord=findViewById(R.id.id_fab);
 		db=SQLiteHelper.getSQLiteHelper(this);
 		wordList=new ArrayList();
@@ -70,34 +79,55 @@ implements View.OnClickListener,View.OnLongClickListener
 	}
 	
 	@Override
-	public void onClick(View p1)
-	{
-		switch(p1.getId()){
+	public void onClick(View p1){
+		if(selectionMode.isInSelectionMode()){
+			switch(p1.getId()){
+				case R.id.id_cardView:
+				    selectionMode.selectItem(p1);
+					break;
+			}
+		}else{
+			switch(p1.getId()){
 			case R.id.id_fab:
 				startActivityForResult(new Intent(this,
 				NotificationDialogActivity.class),24);
-		}
+				break;
+		    }
+	    }
 	}
-
-
-	@Override
-	public boolean onLongClick(View p1)
-	{
+	
+	//On recyclerView item click
+	public void onRecyclerViewItemClick(View v,int position){
+		Toast.makeText(this,"clicked",Toast.LENGTH_SHORT).show();
+	}
+    @Override
+	public boolean onLongClick(View p1){
+		selectionMode.enterSelectionMode(fabAddWord,toolbar);
+		
 		// TODO: Implement this method
 		switch(p1.getId()){
 			case R.id.id_cardView:
-				p1.setBackground(new ColorDrawable(R.color.colorPrimary));
+				selectionMode.selectItem(p1);
+				break;
 		}
 		return true;
 	}
 	
-
-	
-	
+	//on recyclerview item long click
+	public void onRecyclerViewItemLongClick(View v,int p){
+		
+	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
+		getMenuInflater().inflate(R.menu.menu_word_list,menu);
+		return true;
+	}
+	
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data){
 		// TODO: Implement this method
 		if(requestCode==24){
 			if(resultCode==RESULT_OK){
@@ -105,21 +135,23 @@ implements View.OnClickListener,View.OnLongClickListener
 			}
 		}
 	}
-	
-	
-
 	@Override
-	protected void onStart()
-	{
+	protected void onStart(){
 		// TODO: Implement this method
 		super.onStart();
 		updateWordList();
 	}
 	
-	
-	
-	
-	
+	//on cluck home button
+	@Override
+    public boolean onSupportNavigateUp() {
+        if(selectionMode.isInSelectionMode()){
+			selectionMode.exitSelectionMode();
+		}else{
+			finish();
+		}
+        return true;
+    }
 	//setting event listners
 	private void setListners(){
 		fabAddWord.setOnClickListener(this);
