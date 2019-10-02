@@ -43,14 +43,15 @@ public class MyDialogs implements View.OnClickListener
 			QuizWordHelper quizWordHelper=QuizWordHelper.getInstance(this.context);
 			String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
 			if(quizHelper.insertData(new Quiz(edtQuizName.getText().toString().trim(),date))){
+				dialog.dismiss();
 	           for(int n:selectedWords){
 				   int quizId=quizHelper.retrieveQuizId(edtQuizName.getText().toString().trim());
 				   quizWordHelper.insertData(new QuizWord(wordList.get(n),quizId));
 				  
 			   }
-			   dialog.dismiss();
+				this.context.showInSnackBar("data saved");
 			}
-			this.context.showInToast("Data saved");
+
 		}
 	}
 

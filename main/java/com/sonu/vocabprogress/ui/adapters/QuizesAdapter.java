@@ -9,23 +9,25 @@ import java.util.List;
 import com.sonu.vocabprogress.ui.activities.QuizesActivity;
 import java.util.ArrayList;
 import com.sonu.vocabprogress.R;
+import com.sonu.vocabprogress.utilities.helpers.RecyclerViewTouchEventListener;
+
 import java.util.zip.*;
 import android.view.*;
 import android.widget.*;
 
 public class QuizesAdapter extends RecyclerView.Adapter<QuizesAdapter.QuizesViewHolder>{
 
-	QuizesActivity quizesActivity;
+	RecyclerViewTouchEventListener eventListener;
 	List<Quiz> quizList;
-	public QuizesAdapter(Context context,List<Quiz> list){
-		this.quizesActivity=(QuizesActivity)context;
+	public QuizesAdapter(RecyclerViewTouchEventListener eventListener,List<Quiz> list){
+		this.eventListener=eventListener;
 		this.quizList=list;
 	}
 	@Override
 	public QuizesViewHolder onCreateViewHolder(ViewGroup p1, int p2){
         View view=LayoutInflater.from(p1.getContext()).inflate(R.layout.row_layout_quizes,p1,
 		false);
-		return new QuizesViewHolder(view,quizesActivity);
+		return new QuizesViewHolder(view,eventListener);
 	}
 
 	@Override
@@ -41,15 +43,22 @@ public class QuizesAdapter extends RecyclerView.Adapter<QuizesAdapter.QuizesView
 		return quizList.size();
 	}
 	
-	public static class QuizesViewHolder extends RecyclerView.ViewHolder{
+	public static class QuizesViewHolder extends RecyclerView.ViewHolder
+	implements View.OnClickListener{
 		TextView tvQuizId,tvQuizName,tvQuizDate;
-		QuizesActivity quizesActivity;
-		public QuizesViewHolder(View v,Context context){
+		RecyclerViewTouchEventListener eventListener;
+		public QuizesViewHolder(View v,RecyclerViewTouchEventListener eventListener){
 			super(v);
-			quizesActivity=(QuizesActivity)context;
+			this.eventListener=eventListener;
 			tvQuizId=v.findViewById(R.id.id_tv_quizId);
 			tvQuizName=v.findViewById(R.id.id_tv_quizName);
 			tvQuizDate=v.findViewById(R.id.id_tv_quizDate);
+			v.setOnClickListener(this);
+		}
+
+		@Override
+		public void onClick(View v) {
+			eventListener.onRecyclerViewItemClick(v,getAdapterPosition());
 		}
 	}
 	

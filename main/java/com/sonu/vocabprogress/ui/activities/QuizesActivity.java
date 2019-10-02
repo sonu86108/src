@@ -1,5 +1,7 @@
 package com.sonu.vocabprogress.ui.activities;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import com.sonu.vocabprogress.R;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,10 +12,14 @@ import java.util.ArrayList;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import com.sonu.vocabprogress.utilities.helpers.QuizHelper;
+import com.sonu.vocabprogress.utilities.helpers.RecyclerViewTouchEventListener;
+
 import android.database.Cursor;
+import android.view.View;
 
 
-public class QuizesActivity extends AppCompatActivity{
+public class QuizesActivity extends AppCompatActivity implements
+		RecyclerViewTouchEventListener {
 
 	RecyclerView quizesRecyclerView;
 	QuizesAdapter quizesAdapter;
@@ -59,7 +65,19 @@ public class QuizesActivity extends AppCompatActivity{
 		}
 		quizesAdapter.notifyDataSetChanged();
 	}
-	
-	
-	
+
+	@Override
+	public void onRecyclerViewItemClick(View v, int p) {
+		if(v.getId()==R.id.id_cardView_quizRow){
+			Intent intent=new Intent(QuizesActivity.this,QuizWordsActivity.class);
+			intent.putExtra("quizId",quizList.get(p).getQuizId());
+			startActivity(intent);
+		}
+
+	}
+
+	@Override
+	public void onRecyclerViewItemLongClick(View v, int p) {
+
+	}
 }

@@ -26,7 +26,6 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordLi
 	@Override
 	public WordListViewHolder onCreateViewHolder(ViewGroup p1, int p2)
 	{
-		// TODO: Implement this method
 		View view=LayoutInflater.from(p1.getContext()).
 		inflate(R.layout.row_layout_words,p1,false);
 		return new WordListViewHolder(view,eventListner);
@@ -47,7 +46,6 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordLi
 	@Override
 	public int getItemCount()
 	{
-		// TODO: Implement this method
 		return wordList.size();
 	}
 

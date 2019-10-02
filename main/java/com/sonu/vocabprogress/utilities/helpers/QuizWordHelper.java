@@ -43,10 +43,12 @@ public class QuizWordHelper
 		}
 	}
 	
-	public Cursor retrieveData(int quizId){
-		String query="SELECT * FROM "+db.TN_QUIZ_WORD_LIST+" WHERE "+db.C3_QUIZ_ID+"="+quizId;
+	public Cursor retrieveData(){
+		String query="SELECT "+db.C2_QWL_WORD_NAME+","+
+				db.C4_QWL_MEANING+","+db.C5_QWL_DESC+" FROM "+db.TN_QUIZ_WORD_LIST+" WHERE "+db.C3_QUIZ_ID+"=";
+		String q="SELECT * FROM "+db.TN_QUIZ_WORD_LIST;
 		Cursor cursor=
-		db.getReadableDatabase().rawQuery(query,null);
+		db.getReadableDatabase().rawQuery(q,null);
 		return cursor;
 	}
 	
