@@ -1,24 +1,25 @@
 package com.sonu.vocabprogress.ui.adapters;
-import androidx.recyclerview.widget.*;
-import android.view.*;
-import android.widget.*;
-import android.text.*;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.List;
+import com.sonu.vocabprogress.models.Word;
+import com.sonu.vocabprogress.ui.activities.WordListActivity;
+import android.content.Context;
+import android.view.ViewGroup;
+import android.view.View;
+import android.view.LayoutInflater;
 import com.sonu.vocabprogress.R;
-import com.sonu.vocabprogress.models.*;
-import java.util.*;
-import com.sonu.vocabprogress.ui.activities.*;
-import android.content.*;
-import androidx.cardview.widget.*;
-import android.view.View.*;
+import android.widget.TextView;
+import androidx.cardview.widget.CardView;
+import com.sonu.vocabprogress.utilities.helpers.RecyclerViewTouchEventListener;
+
 
 public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordListViewHolder>
 {
 	List<Word> wordList;
-	WordListActivity wordListActivity;
-	
-	public WordListAdapter(List<Word> wordlist,Context ctx){
+	RecyclerViewTouchEventListener eventListner;
+	public WordListAdapter(List<Word> wordlist,RecyclerViewTouchEventListener eventListner){
 		this.wordList=wordlist;
-		this.wordListActivity=(WordListActivity)ctx;
+		this.eventListner=eventListner;
 		
 	}
 
@@ -28,7 +29,7 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordLi
 		// TODO: Implement this method
 		View view=LayoutInflater.from(p1.getContext()).
 		inflate(R.layout.row_layout_words,p1,false);
-		return new WordListViewHolder(view,wordListActivity);
+		return new WordListViewHolder(view,eventListner);
 	}
 	
 
@@ -37,9 +38,9 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordLi
 	{
 		// TODO: Implement this method
 		Word word =this.wordList.get(p2);
-		p1.name.setText(word.getName());
-		p1.meaning.setText(word.getMeaning());
-		p1.desc.setText(word.getDesc());
+		p1.name.setText(word.getWordName());
+		p1.meaning.setText(word.getWordMeaning());
+		p1.desc.setText(word.getWordDesc());
 		//p1.cardView.setOnLongClickListener(this.mainActivity);
 	}
 	
@@ -54,11 +55,11 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordLi
 	public class WordListViewHolder extends RecyclerView.ViewHolder implements
 	View.OnClickListener,View.OnLongClickListener{
 		public TextView name,meaning,desc;
-		WordListActivity wordListActivity;
+		RecyclerViewTouchEventListener eventListener;
 		CardView cardView;
-		public WordListViewHolder(View view,Context wordListActivity){
+		public WordListViewHolder(View view,RecyclerViewTouchEventListener eventListener){
 			super(view);
-			this.wordListActivity=(WordListActivity)wordListActivity;
+			this.eventListener=eventListener;
 			name=view.findViewById(R.id.id_textview_word);
 			meaning=view.findViewById(R.id.id_textview_meaning);
 			desc=view.findViewById(R.id.id_textview_desc);
@@ -69,15 +70,15 @@ public class WordListAdapter extends RecyclerView.Adapter<WordListAdapter.WordLi
 		}
 
 		@Override
-		public void onClick(View p1)
+		public void onClick(View v)
 		{
-			wordListActivity.onRecyclerViewItemClick(p1,getAdapterPosition());
+			eventListener.onRecyclerViewItemClick(v,getAdapterPosition());
 		}
 
 		@Override
-		public boolean onLongClick(View p1)
+		public boolean onLongClick(View v)
 		{
-			wordListActivity.onRecyclerViewItemLongClick(p1,getAdapterPosition());
+			eventListener.onRecyclerViewItemLongClick(v,getAdapterPosition());
 			return true;
 		}
 

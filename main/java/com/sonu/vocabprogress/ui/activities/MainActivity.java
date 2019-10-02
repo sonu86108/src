@@ -1,22 +1,23 @@
 package com.sonu.vocabprogress.ui.activities;
-
-import android.os.*;
-import androidx.appcompat.app.*;
-import androidx.cardview.widget.CardView;
-import android.content.*;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
-import com.sonu.vocabprogress.services.*;
-import android.widget.*;
+import android.widget.Switch;
+import androidx.appcompat.app.ActionBar;
+import androidx.cardview.widget.CardView;
+import android.content.Intent;
+import com.sonu.vocabprogress.utilities.helpers.SQLiteHelper;
+import com.sonu.vocabprogress.models.Word;
+import android.content.SharedPreferences;
+import android.os.Bundle;
 import com.sonu.vocabprogress.R;
-import com.sonu.vocabprogress.utilities.helpers.*;
-import com.sonu.vocabprogress.models.*;
-import android.app.Dialog;
-import android.preference.*;
-import android.database.*;
-import com.google.android.material.floatingactionbutton.*;
-import android.widget.RadioGroup.*;
-import com.sonu.vocabprogress.utilities.sharedprefs.*;
+import android.widget.CompoundButton;
+import com.sonu.vocabprogress.utilities.sharedprefs.Prefs;
+import android.widget.Toast;
+import com.sonu.vocabprogress.services.ClipBoardListenerService;
+import android.database.Cursor;
+import com.sonu.vocabprogress.ui.activities.WordListActivity;
+
+
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,Switch.OnCheckedChangeListener
@@ -63,7 +64,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				 startActivity(intent);
 				 break;
 			case R.id.id_cardView_Quizes:
-				readWordData();
+				startActivity(new Intent(MainActivity.this,
+				QuizesActivity.class));
 				break;
 				
 		}

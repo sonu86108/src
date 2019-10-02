@@ -6,8 +6,8 @@
         android:title="Delete"
 		app:showAsAction="always"/>
     <item
-        android:id="@+id/item"
-        android:title="Item"/>
+        android:id="@+id/id_it_makeQuiz"
+        android:title="Make Quiz"/>
 	
     <item
         android:id="@+id/item"

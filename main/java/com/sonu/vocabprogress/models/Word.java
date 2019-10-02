@@ -2,43 +2,42 @@ package com.sonu.vocabprogress.models;
 
 public class Word
 {
-	String name,meaning,desc;
+	String wordName,wordMeaning,wordDesc;
 
-	public Word(String name, String meaning, String desc)
-	{
-		this.name = name;
-		this.meaning = meaning;
-		this.desc = desc;
+	public Word(String wordName, String wordMeaning, String wordDesc){
+		this.wordName = wordName;
+		this.wordMeaning = wordMeaning;
+		this.wordDesc = wordDesc;
 	}
 
+	public void setWordName(String wordName){
+    this.wordName = wordName;
+    }
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+public String getWordName()
+{
+return wordName;
+}
 
-	public String getName()
-	{
-		return name;
-	}
+public void setWordMeaning(String wordMeaning)
+{
+this.wordMeaning = wordMeaning;
+}
 
-	public void setMeaning(String meaning)
-	{
-		this.meaning = meaning;
-	}
+public String getWordMeaning()
+{
+return wordMeaning;
+}
 
-	public String getMeaning()
-	{
-		return meaning;
-	}
+public void setWordDesc(String wordDesc)
+{
+this.wordDesc = wordDesc;
+}
 
-	public void setDesc(String desc)
-	{
-		this.desc = desc;
-	}
+public String getWordDesc()
+{
+return wordDesc;
+}
 
-	public String getDesc()
-	{
-		return desc;
-	}
+
 }

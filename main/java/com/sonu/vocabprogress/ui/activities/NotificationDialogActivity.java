@@ -13,6 +13,7 @@ import com.sonu.vocabprogress.utilities.helpers.*;
 import com.google.android.material.floatingactionbutton.*;
 import android.content.*;
 import android.database.sqlite.*;
+import android.transition.*;
 
 public class NotificationDialogActivity extends AppCompatActivity 
 implements View.OnClickListener
@@ -26,6 +27,11 @@ implements View.OnClickListener
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			getWindow().requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS);
+			getWindow().setEnterTransition(new Fade());
+		    getWindow().setExitTransition(new Fade());
+		}
 		//Finish activity on touch outside of activity
 		setFinishOnTouchOutside(true);
 		setContentView(R.layout.activity_notification_dialog);
@@ -60,6 +66,7 @@ implements View.OnClickListener
 	
     //window configurations to make activity transparent
 	private void windowDecor(){
+		
 		Window window=getWindow();
 		window.setBackgroundDrawable(new ColorDrawable(
 										 Color.TRANSPARENT));
@@ -67,6 +74,7 @@ implements View.OnClickListener
 		window.setLayout(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT);
 		window.setGravity(Gravity.TOP);
 		getSupportActionBar().hide();
+		
 	}
 
 	//initialization 
