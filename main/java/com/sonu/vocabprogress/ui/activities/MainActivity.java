@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.sonu.vocabprogress.services.ClipBoardListenerService;
 import android.database.Cursor;
 import com.sonu.vocabprogress.ui.activities.WordListActivity;
+import com.sonu.vocabprogress.utilities.tmp.*;
 
 
 
@@ -26,7 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	
 	
 	ActionBar actionBar;
-	CardView cardViewSettings,cardViewWordList,cardViewQuizes;
+	CardView cardViewSettings,cardViewWordList,cardViewQuizes,
+	cardViewHelp,cardViewPlayQuiz;
 	Intent serviceIntent;
 	SQLiteHelper db;
 	Word word;
@@ -60,12 +62,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 				break;
 				 
 			case R.id.id_cardView_WordList:
-				 Intent intent=new Intent(MainActivity.this,WordListActivity.class);
-				 startActivity(intent);
+				 Intent wordListIntent=new Intent(MainActivity.this,WordListActivity.class);
+				 startActivity(wordListIntent);
 				 break;
 			case R.id.id_cardView_Quizes:
-				startActivity(new Intent(MainActivity.this,
-				QuizesActivity.class));
+				Intent quizListIntent=new Intent(MainActivity.this,
+												 QuizesActivity.class);
+				startActivity(quizListIntent);
+				break;
+			case R.id.id_cardView_help:
+				startActivity(new Intent(this,AndroidDatabaseManager.class));
+				break;
+			case R.id.id_cardView_playQuiz:
+				Intent playQuizIntent=new Intent(MainActivity.this,
+												 QuizesActivity.class);
+				playQuizIntent.putExtra("play_mode",true);
+				startActivity(playQuizIntent);
 				break;
 				
 		}
@@ -99,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		cardViewSettings=findViewById(R.id.id_cardView_settings);
 		cardViewWordList=findViewById(R.id.id_cardView_WordList);
 		cardViewQuizes=findViewById(R.id.id_cardView_Quizes);
+		cardViewHelp=findViewById(R.id.id_cardView_help);
+		cardViewPlayQuiz=findViewById(R.id.id_cardView_playQuiz);
 		db=SQLiteHelper.getSQLiteHelper(this);
 		//Intent for service
 		serviceIntent=new Intent(MainActivity.this,ClipBoardListenerService.class);
@@ -109,6 +123,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		cardViewSettings.setOnClickListener(this);
 		cardViewWordList.setOnClickListener(this);
 		cardViewQuizes.setOnClickListener(this);
+		cardViewHelp.setOnClickListener(this);
+		cardViewPlayQuiz.setOnClickListener(this);
 		mainSwitch.setOnCheckedChangeListener(this);
 	}
 	

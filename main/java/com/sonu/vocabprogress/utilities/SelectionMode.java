@@ -151,7 +151,7 @@ public class SelectionMode
 	}
 	
 	public void makeQuiz1(){
-		MyDialogs quizDialog=new MyDialogs(wordListActivity,wordList,selectedWordList);
+		MyDialogs quizDialog=new MyDialogs(wordListActivity,this,wordList,selectedWordList);
 		quizDialog.showDialog();
 	}
 	

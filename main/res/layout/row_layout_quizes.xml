@@ -23,7 +23,7 @@
 			android:layout_toRightOf="@id/id_tv_quizId"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:text="Meaning"
+			android:text="QuizName"
 			android:textStyle="bold"
 			android:id="@+id/id_tv_quizName"/>
 
@@ -35,6 +35,14 @@
 			android:layout_height="wrap_content"
 			android:text="Date"
 			android:id="@+id/id_tv_quizDate"/>
+		<ImageView
+			android:id="@+id/id_playQuiz"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_alignParentRight="true"
+			android:background="@color/light"
+			android:visibility="gone"
+			android:src="@drawable/ic_btn_play"/>
 
 
 

@@ -5,6 +5,8 @@ import androidx.core.app.*;
 import com.sonu.vocabprogress.models.*;
 import android.database.*;
 import android.widget.*;
+import java.util.*;
+import android.util.*;
 
 public class SQLiteHelper extends SQLiteOpenHelper{
 	private static  SQLiteHelper sqliteHelper=null;
@@ -24,8 +26,8 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 	
 	public static final String TN_QUIZ_WORD_LIST="quiz_word_list";
 	public static final String C1_QWL_ID="id";
-	public static final String C2_QWL_WORD_NAME="word_name";
-	public static final String C3_QUIZ_ID="quiz_id";
+	public static final String C2_QUIZ_ID="quiz_id";
+	public static final String C3_QWL_WORD_NAME="word_name";
 	public static final String C4_QWL_MEANING="meaning";
 	public static final String C5_QWL_DESC="desc";
 	
@@ -49,8 +51,8 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 				   C2_NAME + " TEXT UNIQUE," + C3_MEANING + " TEXT," + C4_DESC + " TEXT)");
 		p1.execSQL("CREATE TABLE " + TN_QUIZ_LIST + " (" + C1_QUIZ_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
 				   C2_QUIZ_NAME + " TEXT UNIQUE," + C3_QUIZ_DATE + " TEXT)");
-		p1.execSQL("CREATE TABLE " + TN_QUIZ_WORD_LIST + " (" + C1_QWL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-				   C2_QWL_WORD_NAME+ " TEXT UNIQUE," + C3_QUIZ_ID + " INTEGER," + C4_QWL_MEANING+ " TEXT,"+C5_QWL_DESC+" TEXT)");
+		p1.execSQL("CREATE TABLE " + TN_QUIZ_WORD_LIST + " (" + C1_QWL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," + C2_QUIZ_ID + " TEXT,"+
+				   C3_QWL_WORD_NAME+ " TEXT UNIQUE,"  + C4_QWL_MEANING+ " TEXT,"+C5_QWL_DESC+" TEXT)");
 	}
 
 	@Override
@@ -165,5 +167,51 @@ public class SQLiteHelper extends SQLiteOpenHelper{
 			return true;
 		}
 	}
+	
+	//method for AndroidDatabaseManager
+	public ArrayList<Cursor> getData(String Query){
+		//get writable database
+		SQLiteDatabase sqlDB = this.getWritableDatabase();
+		String[] columns = new String[] { "message" };
+		//an array list of cursor to save two cursors one has results from the query 
+		//other cursor stores error message if any errors are triggered
+		ArrayList<Cursor> alc = new ArrayList<Cursor>(2);
+		MatrixCursor Cursor2= new MatrixCursor(columns);
+		alc.add(null);
+		alc.add(null);
+
+		try{
+			String maxQuery = Query ;
+			//execute the query results will be save in Cursor c
+			Cursor c = sqlDB.rawQuery(maxQuery, null);
+
+			//add value to cursor2
+			Cursor2.addRow(new Object[] { "Success" });
+
+			alc.set(1,Cursor2);
+			if (null != c && c.getCount() > 0) {
+
+				alc.set(0,c);
+				c.moveToFirst();
+
+				return alc ;
+			}
+			return alc;
+		} catch(SQLException sqlEx){
+			Log.d("printing exception", sqlEx.getMessage());
+			//if any exceptions are triggered save the error message to cursor an return the arraylist
+			Cursor2.addRow(new Object[] { ""+sqlEx.getMessage() });
+			alc.set(1,Cursor2);
+			return alc;
+		} catch(Exception ex){
+			Log.d("printing exception", ex.getMessage());
+
+			//if any exceptions are triggered save the error message to cursor an return the arraylist
+			Cursor2.addRow(new Object[] { ""+ex.getMessage() });
+			alc.set(1,Cursor2);
+			return alc;
+		}
+	}
+	
 	
 }

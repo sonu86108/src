@@ -37,6 +37,7 @@ public class QuizWordsActivity extends AppCompatActivity implements RecyclerView
 			quizId=getIntent().getExtras().getInt("quizId");
 			Toast.makeText(this,"id: "+quizId,Toast.LENGTH_LONG).show();
 		}
+		updateWordList();
 	}
 
 	public void init(){
@@ -56,7 +57,7 @@ public class QuizWordsActivity extends AppCompatActivity implements RecyclerView
 	@Override
 	protected void onStart() {
 		super.onStart();
-		updateWordList();
+		//updateWordList();
 	}
 
 	@Override
@@ -71,12 +72,15 @@ public class QuizWordsActivity extends AppCompatActivity implements RecyclerView
 
 	public void updateWordList(){
 		wordList.clear();
-	   Cursor cursor=	quizWordHelper.retrieveData();
+	   Cursor cursor=	quizWordHelper.retrieveData(quizId);
 	   if(cursor.moveToFirst()){
 	   	do{
 	   		wordList.add(new Word(cursor.getString(0),cursor.getString(1),
 					cursor.getString(2)));
 		}while(cursor.moveToNext());
+	   }else{
+		   Toast.makeText(this,"Words not found",Toast.LENGTH_LONG).
+		   show();
 	   }
 	   wordListAdapter.notifyDataSetChanged();
 	}

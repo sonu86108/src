@@ -4,7 +4,7 @@ public class QuizWord extends Word
 {
 
 	private int quizId;
-	public QuizWord(Word word,int quizId){
+	public QuizWord(int quizId,Word word){
 		super(word.getWordName(),word.getWordMeaning(),word.getWordDesc());
 		this.quizId=quizId;
 	}

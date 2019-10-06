@@ -23,6 +23,7 @@ public class QuizesActivity extends AppCompatActivity implements
 
 	RecyclerView quizesRecyclerView;
 	QuizesAdapter quizesAdapter;
+	boolean isItPlayMode;
 	List<Quiz> quizList;
 	QuizHelper quizHelper;
 	@Override
@@ -30,6 +31,7 @@ public class QuizesActivity extends AppCompatActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_quizes);
 		init();
+		ifPlayMode();
 		initRecyclerView();
 	}
 	
@@ -40,7 +42,7 @@ public class QuizesActivity extends AppCompatActivity implements
 	
 	private void initRecyclerView(){
 		quizesRecyclerView=findViewById(R.id.id_quizes_recyclerView);
-		quizesAdapter=new QuizesAdapter(this,quizList);
+		quizesAdapter=new QuizesAdapter(this,quizList,isItPlayMode);
 		RecyclerView.LayoutManager lm=new LinearLayoutManager(getApplicationContext());
 		quizesRecyclerView.setLayoutManager(lm);
 		quizesRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -68,10 +70,17 @@ public class QuizesActivity extends AppCompatActivity implements
 
 	@Override
 	public void onRecyclerViewItemClick(View v, int p) {
-		if(v.getId()==R.id.id_cardView_quizRow){
+		
+		switch(v.getId()){
+		  case R.id.id_cardView_quizRow:
 			Intent intent=new Intent(QuizesActivity.this,QuizWordsActivity.class);
 			intent.putExtra("quizId",quizList.get(p).getQuizId());
 			startActivity(intent);
+			break;
+		  case R.id.id_playQuiz:
+			  Intent playQuizIntent=new Intent(this,PlayQuizActivity.class);
+			  playQuizIntent.putExtra("quizId",quizList.get(p).getQuizId());
+			  startActivity(playQuizIntent);
 		}
 
 	}
@@ -79,5 +88,12 @@ public class QuizesActivity extends AppCompatActivity implements
 	@Override
 	public void onRecyclerViewItemLongClick(View v, int p) {
 
+	}
+	
+	public void ifPlayMode(){
+		if(getIntent().getExtras()!=null && getIntent().getExtras().
+		getBoolean("play_mode")){
+			isItPlayMode=true;
+		}
 	}
 }

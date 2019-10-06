@@ -19,15 +19,17 @@ public class QuizesAdapter extends RecyclerView.Adapter<QuizesAdapter.QuizesView
 
 	RecyclerViewTouchEventListener eventListener;
 	List<Quiz> quizList;
-	public QuizesAdapter(RecyclerViewTouchEventListener eventListener,List<Quiz> list){
+	boolean isItPlayMode;
+	public QuizesAdapter(RecyclerViewTouchEventListener eventListener,List<Quiz> list,boolean mode){
 		this.eventListener=eventListener;
 		this.quizList=list;
+		this.isItPlayMode=mode;
 	}
 	@Override
 	public QuizesViewHolder onCreateViewHolder(ViewGroup p1, int p2){
         View view=LayoutInflater.from(p1.getContext()).inflate(R.layout.row_layout_quizes,p1,
 		false);
-		return new QuizesViewHolder(view,eventListener);
+		return new QuizesViewHolder(view,eventListener,isItPlayMode);
 	}
 
 	@Override
@@ -46,19 +48,30 @@ public class QuizesAdapter extends RecyclerView.Adapter<QuizesAdapter.QuizesView
 	public static class QuizesViewHolder extends RecyclerView.ViewHolder
 	implements View.OnClickListener{
 		TextView tvQuizId,tvQuizName,tvQuizDate;
+		ImageView ivPlayQuiz;
 		RecyclerViewTouchEventListener eventListener;
-		public QuizesViewHolder(View v,RecyclerViewTouchEventListener eventListener){
+		boolean isItPlayMode;
+		public QuizesViewHolder(View v,RecyclerViewTouchEventListener eventListener,boolean mode){
 			super(v);
 			this.eventListener=eventListener;
 			tvQuizId=v.findViewById(R.id.id_tv_quizId);
 			tvQuizName=v.findViewById(R.id.id_tv_quizName);
 			tvQuizDate=v.findViewById(R.id.id_tv_quizDate);
-			v.setOnClickListener(this);
+			if(mode){
+				isItPlayMode=true;
+				ivPlayQuiz=v.findViewById(R.id.id_playQuiz);
+				ivPlayQuiz.setVisibility(View.VISIBLE);
+				ivPlayQuiz.setOnClickListener(this);
+			}else{
+				v.setOnClickListener(this);
+			}
+			
 		}
 
 		@Override
 		public void onClick(View v) {
 			eventListener.onRecyclerViewItemClick(v,getAdapterPosition());
+			
 		}
 	}
 	

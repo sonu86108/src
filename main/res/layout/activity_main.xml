@@ -123,6 +123,7 @@
 
         <!-- Column 1 -->
         <androidx.cardview.widget.CardView
+			android:id="@+id/id_cardView_playQuiz"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"
@@ -244,6 +245,7 @@
 
         <!-- Column 2 -->
         <androidx.cardview.widget.CardView
+			android:id="@+id/id_cardView_help"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"

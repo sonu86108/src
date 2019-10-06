@@ -10,17 +10,25 @@ import com.sonu.vocabprogress.models.*;
 import com.sonu.vocabprogress.utilities.helpers.*;
 import android.icu.text.*;
 import com.sonu.vocabprogress.ui.activities.*;
+import com.sonu.vocabprogress.utilities.*;
 
 public class MyDialogs implements View.OnClickListener
 {
 	Dialog dialog;
 	WordListActivity context;
+	SelectionMode selectionMode;
 	EditText edtQuizName;
 	Button btnSave;
 	List<Word> wordList;
 	List<Integer> selectedWords;
-	public MyDialogs(Context context,List<Word> wordList,List<Integer> selectedWords){
+	QuizHelper quizHelper;
+	QuizWordHelper quizWordHelper;
+	String date ,quizName;
+	int quizId;
+	QuizWord quizWord;
+	public MyDialogs(Context context,SelectionMode selectionMode,List<Word> wordList,List<Integer> selectedWords){
 		this.context=(WordListActivity)context;
+		this.selectionMode=selectionMode;
 		this.wordList=wordList;
 		dialog=new Dialog(context);
 		this.selectedWords=selectedWords;
@@ -28,7 +36,10 @@ public class MyDialogs implements View.OnClickListener
 		dialog.setCancelable(true);
 		edtQuizName=dialog.findViewById(R.id.id_quizname);
 		btnSave=dialog.findViewById(R.id.id_btn_save);
+		quizHelper=QuizHelper.getInstance(this.context);
+		quizWordHelper=QuizWordHelper.getInstance(this.context);
 		btnSave.setOnClickListener(this);
+		date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
 		
 	}
 	
@@ -39,22 +50,31 @@ public class MyDialogs implements View.OnClickListener
 	@Override
 	public void onClick(View p1){
 		if(p1.getId()==R.id.id_btn_save){
-			QuizHelper quizHelper=QuizHelper.getInstance(this.context);
-			QuizWordHelper quizWordHelper=QuizWordHelper.getInstance(this.context);
-			String date = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-			if(quizHelper.insertData(new Quiz(edtQuizName.getText().toString().trim(),date))){
-				dialog.dismiss();
-	           for(int n:selectedWords){
-				   int quizId=quizHelper.retrieveQuizId(edtQuizName.getText().toString().trim());
-				   quizWordHelper.insertData(new QuizWord(wordList.get(n),quizId));
-				  
-			   }
-				this.context.showInSnackBar("data saved");
+			quizName=edtQuizName.getText().toString().trim();
+			if(quizHelper.insertData(new Quiz(quizName,date))){
+				quizId=quizHelper.retrieveQuizId(quizName);
+	            saveSelectedWords();
+			}else{
+				context.showInToast("Error creating quiz");
 			}
 
 		}
 	}
-
+	
+	private void saveSelectedWords(){
+		StringBuilder indexes=new StringBuilder();
+		if(selectedWords.isEmpty()){
+			this.context.showInSnackBar("Selected words not found");
+			dialog.dismiss();
+		}else{
+			for(int n:selectedWords){
+		     quizWordHelper.insertData(new QuizWord(quizId,wordList.get(n)));
+			}
+			dialog.dismiss();
+			selectionMode.exitSelectionMode();
+			context.showInSnackBar("Quiz created");
+		}
+	}
 	
 	
 }
