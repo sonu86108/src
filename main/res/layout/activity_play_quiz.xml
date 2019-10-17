@@ -62,14 +62,26 @@
 		android:layout_alignParentRight="true"
 		android:text="question/10"
 		android:textStyle="bold"/>
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal"
+		android:layout_centerInParent="true"
+		android:layout_below="@id/id_tv_qNumber"
+		android:layout_marginTop="30dp">
 	<Button
 		android:id="@+id/id_btn_next"
-		android:layout_width="200dp"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:layout_below="@id/id_tv_qNumber"
-		android:layout_centerHorizontal="true"
-		android:layout_marginTop="50dp"
 		android:text="Next"/>
+	<Button
+		android:id="@+id/id_btn_result"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="30dp"
+		android:visibility="gone"
+		android:text="Result"/>
+	</LinearLayout>
 	
     
 </RelativeLayout>

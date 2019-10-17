@@ -18,10 +18,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
+import android.widget.RadioGroup;
+import android.content.Intent;
 
-public class PlayQuizActivity extends AppCompatActivity
+public class PlayQuizActivity extends AppCompatActivity implements
+View.OnClickListener
 {
-
 	int quizId,quizNumber=0,totalQuiz=10;
 	List<Word> quizWords;
 	List<String> randomWords;
@@ -31,7 +33,8 @@ public class PlayQuizActivity extends AppCompatActivity
 	String text="Select the appropriate option for the word: ";
 	RadioGroup rgOptions;
 	RadioButton rbOption1,rbOption2,rbOption3,rbOption4;
-	Button btnNextQuiz;
+	Button btnNextQuiz,btnResult;
+	int checkedId,rightOption,score;;
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
@@ -40,11 +43,10 @@ public class PlayQuizActivity extends AppCompatActivity
 		quizId=getQuizId();
 		quizWords=getQuizWords();
 		setQuiz();
-		btnNextQuiz.setOnClickListener(new View.OnClickListener(){
-            @Override
-			public void onClick(View p1){
-					onClickNextButton(p1);
-				}});
+		btnNextQuiz.setOnClickListener(this);
+		btnResult.setOnClickListener(this);
+		
+		
 	}
 	
 	public void init(){
@@ -61,41 +63,79 @@ public class PlayQuizActivity extends AppCompatActivity
 		radioButtons.add(rbOption4);
 		tvqQNumber=findViewById(R.id.id_tv_qNumber);
 		btnNextQuiz=findViewById(R.id.id_btn_next);
+		btnResult=findViewById(R.id.id_btn_result);
 		quizWordHelper=QuizWordHelper.getInstance(this);
 		randomWords=new ArrayList<>();
 		loadWordsFromAssets();
 		
 	}
-	
-	public int getQuizId(){
-		return getIntent().getExtras().getInt("quizId");
+
+	@Override
+	public void onClick(View p1){
+		if(p1.getId()==R.id.id_btn_next){
+			onClickNextButton(p1);
+		}else if(p1.getId()==R.id.id_btn_result){
+			showResult();
+		}
 	}
-	
+	public void onClickNextButton(View v){
+		if(rgOptions.getCheckedRadioButtonId()==-1){
+			btnNextQuiz.setError("Must select an item");
+		}else if(quizNumber==10 || quizWords.size()==quizNumber){
+			btnNextQuiz.setError(null);
+			saveSelection();
+			btnNextQuiz.setEnabled(false);
+			btnResult.setVisibility(View.VISIBLE);
+		}else {
+			btnNextQuiz.setError(null);
+			saveSelection();
+			setQuiz();
+		}
+		
+	}
+	public void saveSelection(){
+		if(radioButtons.get(rightOption).getId()==rgOptions.getCheckedRadioButtonId()){
+			score=score+1;
+		}
+	}
+	public void showResult(){
+		Intent intent=new Intent(this,QuizResultActivity.class);
+		intent.putExtra("quizId",quizId);
+		intent.putExtra("score",score);
+		startActivity(intent);
+		finish();
+	}
 	public void setQuiz(){
+		rgOptions.clearCheck();
+		int a=0;
 		Word word=quizWords.get(quizNumber);
 		tvqQNumber.setText(String.valueOf(1+quizNumber)+"/"+String.valueOf(totalQuiz));
 		tvQuestion.setText(text+word.getWordName());
 		Random random=new Random();
-		int rNum=(random.nextInt(4));
-		radioButtons.get(rNum).
+		rightOption=(random.nextInt(4));
+		radioButtons.get(rightOption).
 		setText(word.getWordMeaning());
+		a=random.nextInt(randomWords.size());
 		for(int n=0;n<=(radioButtons.size()-1);n++){
-			if(n==rNum){
+			if(n==rightOption){
 				continue;
-			}else if(randomWords.isEmpty()==false){
+			}else if(a+1>=randomWords.size()){
+				a=0;
 				radioButtons.get(n).setText(
-				randomWords.get(random.nextInt(randomWords.size())));
+				randomWords.get(a));
+			}else{
+				a=a+1;
+				radioButtons.get(n).setText(
+					randomWords.get(a));
 			}
-		}
-		if(quizWords.size()==quizNumber+1 ||quizNumber==9){
-			btnNextQuiz.setEnabled(false);
 		}
 		quizNumber++;
 		
 	}
-	public void onClickNextButton(View v){
-		setQuiz();
+	public int getQuizId(){
+		return getIntent().getExtras().getInt("quizId");
 	}
+	
 	
 	public void loadWordsFromAssets(){
 		InputStreamReader isr=null;

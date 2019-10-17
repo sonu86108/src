@@ -8,6 +8,7 @@ import com.sonu.vocabprogress.R;
 import com.sonu.vocabprogress.ui.activities.*;
 import com.sonu.vocabprogress.utilities.helpers.*;
 import com.sonu.vocabprogress.models.*;
+import android.database.sqlite.*;
 
 public class ClipBoardListenerService extends Service
 {
@@ -31,13 +32,10 @@ public class ClipBoardListenerService extends Service
 		clipBoardManager.addPrimaryClipChangedListener(new ClipboardManager.OnPrimaryClipChangedListener() {
 
 				@Override
-				public void onPrimaryClipChanged()
-				{
+				public void onPrimaryClipChanged(){
 					String word=clipBoardManager.getText().toString().trim();
 			        makeNotification(word);
-					if(db.insertData(new Word(word,"n/a","n/a"))){
-						Toast.makeText(ClipBoardListenerService.this,"word added success",Toast.LENGTH_SHORT);
-					}
+					saveToDb(word);
 				}
 
 
@@ -46,7 +44,7 @@ public class ClipBoardListenerService extends Service
 		return super.onStartCommand(intent, flags, startId);
 	}
 	
-	
+	//make notification to show copied word
 	public void makeNotification(String msg){
 		int nid=0;
 		//notification builder to build notification
@@ -76,15 +74,22 @@ public class ClipBoardListenerService extends Service
 	}
 
 	@Override
-	public void onDestroy()
-	{
+	public void onDestroy(){
 		// TODO: Implement this method
 		super.onDestroy();
 		Toast.makeText(this,"Service stoped",Toast.LENGTH_LONG).show();
 	}
 	
-	
-	
+	//validate copied word if exists or new
+	public void saveToDb(String text){
+		try{
+			if(db.insertData(new Word(text, "n/a", "n/a"))){
+				Toast.makeText(ClipBoardListenerService.this,"word added success",Toast.LENGTH_SHORT);
+			}
+		}catch (SQLiteConstraintException e){
+			Toast.makeText(this,"Text already exits",Toast.LENGTH_SHORT).show();
+		}
+	}
 	
 	
 	

@@ -32,6 +32,7 @@
         <activity android:name=".ui.activities.QuizWordsActivity"/>
 		<activity android:name=".utilities.tmp.AndroidDatabaseManager"/>
 	    <activity android:name=".ui.activities.PlayQuizActivity"/>
+		<activity android:name=".ui.activities.QuizResultActivity"/>
         <service android:name=".services.ClipBoardListenerService" />
     </application>
 

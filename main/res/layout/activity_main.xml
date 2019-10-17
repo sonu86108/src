@@ -8,7 +8,8 @@
 		tools:context="com.sonu.vocabprogress.MainActivity"
 		android:orientation="vertical"
         android:background="@drawable/bg"
-        android:weightSum="10">
+        android:weightSum="10"
+		android:id="@+id/id_layout_mainLayout">
 
     <LinearLayout
         android:orientation="vertical"
@@ -163,6 +164,7 @@
 
         <!-- Column 2 -->
         <androidx.cardview.widget.CardView
+			android:id="@+id/id_cardView_progress"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_columnWeight="1"

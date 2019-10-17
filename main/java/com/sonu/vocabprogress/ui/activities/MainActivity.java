@@ -16,7 +16,8 @@ import android.widget.Toast;
 import com.sonu.vocabprogress.services.ClipBoardListenerService;
 import android.database.Cursor;
 import com.sonu.vocabprogress.ui.activities.WordListActivity;
-import com.sonu.vocabprogress.utilities.tmp.*;
+import com.sonu.vocabprogress.utilities.tmp.AndroidDatabaseManager;
+import com.google.android.material.snackbar.Snackbar;
 
 
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	
 	ActionBar actionBar;
 	CardView cardViewSettings,cardViewWordList,cardViewQuizes,
-	cardViewHelp,cardViewPlayQuiz;
+	cardViewHelp,cardViewPlayQuiz,cardViewProgress;
 	Intent serviceIntent;
 	SQLiteHelper db;
 	Word word;
@@ -58,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	{
 		switch(p1.getId()){
 			case R.id.id_cardView_settings:
-				//Todo
+				showInSnackbar("Sorry, Not Available");
 				break;
 				 
 			case R.id.id_cardView_WordList:
@@ -78,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 												 QuizesActivity.class);
 				playQuizIntent.putExtra("play_mode",true);
 				startActivity(playQuizIntent);
+				break;
+			case R.id.id_cardView_progress:
+				showInSnackbar("Sorry, Not Available");
 				break;
 				
 		}
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		cardViewQuizes=findViewById(R.id.id_cardView_Quizes);
 		cardViewHelp=findViewById(R.id.id_cardView_help);
 		cardViewPlayQuiz=findViewById(R.id.id_cardView_playQuiz);
+		cardViewProgress=findViewById(R.id.id_cardView_progress);
 		db=SQLiteHelper.getSQLiteHelper(this);
 		//Intent for service
 		serviceIntent=new Intent(MainActivity.this,ClipBoardListenerService.class);
@@ -125,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		cardViewQuizes.setOnClickListener(this);
 		cardViewHelp.setOnClickListener(this);
 		cardViewPlayQuiz.setOnClickListener(this);
+		cardViewProgress.setOnClickListener(this);
 		mainSwitch.setOnCheckedChangeListener(this);
 	}
 	
@@ -148,6 +154,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 	//show toast
 	public void showToast(String msg){
 		Toast.makeText(MainActivity.this,msg,Toast.LENGTH_LONG).show();
+	}
+	
+	//show snack bar
+	public void showInSnackbar(String msg){
+		Snackbar.make(findViewById(R.id.id_layout_mainLayout),msg,Snackbar.
+		LENGTH_SHORT).show();
 	}
 
 
