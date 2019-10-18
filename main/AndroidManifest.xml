@@ -1,39 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.sonu.vocabprogress">
+		
+		<uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:icon="@drawable/login_icon"
         android:label="@string/app_name"
         android:resizeableActivity="true"
-        android:theme="@style/AppTheme">
-        <activity 
-			android:name=".ui.activities.WordListActivity"
-			android:theme="@style/Theme.NoActionBar"
-			android:parentActivityName=".ui.activities.MainActivity">
+        android:theme="@style/AppTheme"
+				android:name="androidx.multidex.MultiDexApplication">
+    <activity 
+			    android:name=".ui.activities.WordListActivity"
+			    android:theme="@style/Theme.NoActionBar"
+			    android:parentActivityName=".ui.activities.MainActivity">
 			<meta-data android:name="android.support.PARENT_ACTIVITY"            
 				android:value=".ui.activities.MainActivity" />    
 			</activity>
-		<activity 
+			<activity
+					android:name=".ui.activities.LoginActivity">
+			    <intent-filter>
+							<action android:name="android.intent.action.MAIN" />
+
+							<category android:name="android.intent.category.LAUNCHER" />
+					</intent-filter>
+			</activity>
+	<activity 
 			android:excludeFromRecents="true"
 			android:name=".ui.activities.NotificationDialogActivity"
 			android:theme="@style/TransparentCompat"/>
-        <activity
+   <activity
             android:name=".ui.activities.MainActivity"
             android:label="@string/app_name">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            
+    </activity>
 		<activity android:name=".ui.activities.QuizesActivity"/>
-        <activity android:name=".ui.activities.QuizWordsActivity"/>
+    <activity android:name=".ui.activities.QuizWordsActivity"/>
 		<activity android:name=".utilities.tmp.AndroidDatabaseManager"/>
-	    <activity android:name=".ui.activities.PlayQuizActivity"/>
+	  <activity android:name=".ui.activities.PlayQuizActivity"/>
 		<activity android:name=".ui.activities.QuizResultActivity"/>
-        <service android:name=".services.ClipBoardListenerService" />
+    <service android:name=".services.ClipBoardListenerService" />
     </application>
 
 </manifest>
+
