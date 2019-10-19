@@ -27,6 +27,8 @@ implements View.OnClickListener{
 		protected void onCreate(Bundle savedInstanceState){
 				super.onCreate(savedInstanceState);
 				setContentView(R.layout.activity_login);
+
+				mAuth=FirebaseAuth.getInstance();
 				
 				pbLogin=findViewById(R.id.id_pb_login);
 				btnSignIn=findViewById(R.id.id_btn_signIn);
@@ -37,7 +39,9 @@ implements View.OnClickListener{
 						.requestEmail()
 						.build();
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-				
+
+        //setting listners
+			btnSignIn.setOnClickListener(this);
 			  
 		}
 
